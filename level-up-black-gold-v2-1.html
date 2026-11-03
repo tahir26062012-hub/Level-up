@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0a08">
+<meta name="description" content="LEVEL UP — личная RPG-система развития, квестов и достижений.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>LEVEL UP — Black & Gold</title>
+<style>
+:root{color-scheme:dark;--bg:#090908;--panel:#13120f;--panel2:#1b1914;--line:#373024;--text:#f4f0e7;--muted:#a49a87;--gold:#d8ad54;--gold2:#f3d58c;--gold-dark:#80602a;--red:#d77d72;--green:#91bd91;--r:19px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#332719 0,#14110c 32%,#090908 70%);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.app{max-width:780px;margin:auto;padding:16px 15px 100px}
+header{display:flex;align-items:center;justify-content:space-between;margin:5px 2px 18px}.brand{font-size:21px;font-weight:900;letter-spacing:2.3px}.brand span{color:var(--gold)}.date{color:var(--muted);font-size:12px}
+.card{background:linear-gradient(145deg,#1b1914,#11100d 75%);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:13px;box-shadow:0 12px 32px #0005;position:relative;overflow:hidden}
+.card.goldline{border-color:#6e552c;box-shadow:0 12px 34px #0006,inset 0 1px #d8ad5418}
+.hero{min-height:220px;background:radial-gradient(circle at 86% 35%,#80602a35,transparent 30%),linear-gradient(120deg,#211b11,#12110e 60%,#21180d)}
+.hero:after{content:"";position:absolute;width:190px;height:190px;border:1px solid #d8ad5428;border-radius:50%;right:-65px;top:15px;box-shadow:0 0 0 18px #d8ad5408,0 0 0 38px #d8ad5405}
+.hero-art{width:94px;height:116px;display:grid;place-items:center;font-size:62px;color:var(--gold2);background:linear-gradient(160deg,#6d5025,#17130d 68%);border:1px solid #9d783d;border-radius:48% 48% 18px 18px;box-shadow:0 0 35px #d8ad5425;position:relative;z-index:1}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}.row.start{align-items:flex-start}.muted{color:var(--muted)}.small{font-size:12px}.eyebrow{font-size:10px;letter-spacing:1.8px;color:var(--gold);font-weight:800}.level{font-size:35px;font-weight:900;letter-spacing:-1px;margin:3px 0}.rank{color:#d3c3a0;font-size:12px}.xp{font-size:13px;color:var(--gold2);font-weight:800}
+.progress{height:9px;background:#322b20;border-radius:20px;overflow:hidden;margin:10px 0 6px;border:1px solid #51412a}.progress>i{display:block;height:100%;background:linear-gradient(90deg,#9b702b,var(--gold2));border-radius:20px;transition:width .35s;box-shadow:0 0 12px #e4bc62aa}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.stat{background:linear-gradient(145deg,#1b1914,#100f0c);border:1px solid var(--line);padding:12px;border-radius:15px}.stat b{display:block;font-size:21px;color:var(--gold2)}.stat span{font-size:10px;color:var(--muted)}
+h2{font-size:17px;margin:0 0 12px}h3{font-size:14px;margin:0}.section{margin-top:21px}.task{display:flex;gap:11px;align-items:center;padding:12px 0;border-bottom:1px solid #302a20}.task:last-child{border:0;padding-bottom:0}.check{width:26px;height:26px;flex:0 0 26px;border:1.5px solid #80683c;border-radius:8px;background:#100f0c;color:#17120a;display:grid;place-items:center}.check.done{background:linear-gradient(135deg,var(--gold2),var(--gold));border-color:var(--gold2);font-weight:900}.taskmain{flex:1;min-width:0}.taskmain b{display:block;font-size:13px}.taskmain small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.reward{color:var(--gold2);font-size:12px;font-weight:800;white-space:nowrap}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0b0a08ed;backdrop-filter:blur(18px);border-top:1px solid #413522;display:flex;justify-content:center;z-index:5;padding:7px max(8px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))}
+.navin{display:flex;max-width:780px;width:100%;justify-content:space-around}.nav button{background:none;border:0;color:#968b78;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px;min-width:55px}.nav button strong{font-size:19px;font-weight:500}.nav button.active{color:var(--gold2)}
+.page{display:none}.page.active{display:block}
+.primary{background:linear-gradient(135deg,#f0d18a,#bd8b37);color:#211707;border:0;border-radius:12px;padding:11px 15px;font-weight:900;box-shadow:0 5px 18px #bd8b3725}.secondary{background:#242017;color:var(--text);border:1px solid #5a492d;border-radius:12px;padding:10px 13px}.danger{background:#321d19;color:#e7a096;border:1px solid #704039;border-radius:11px;padding:9px 12px}
+input,select,textarea{width:100%;background:#0d0c09;border:1px solid #4b402c;border-radius:11px;padding:11px 12px;color:var(--text);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--gold)}label{font-size:12px;color:var(--muted);display:block;margin:11px 0 6px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pill{border:1px solid #51432b;border-radius:999px;padding:5px 9px;color:#d0bd96;font-size:10px;white-space:nowrap}
+.skill{margin:14px 0}.skillhead{display:flex;justify-content:space-between;gap:8px;font-size:12px;margin-bottom:6px}.skillbar{height:7px;background:#332b1e;border-radius:9px;overflow:hidden}.skillbar i{display:block;height:100%;background:linear-gradient(90deg,#9c702d,#efd18a);box-shadow:0 0 10px #d8ad5477}
+.empty{padding:20px;text-align:center;color:var(--muted);font-size:13px}.achievement{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.medal{width:43px;height:43px;border-radius:14px;background:linear-gradient(145deg,#45351d,#17130d);border:1px solid #80602a;display:grid;place-items:center;font-size:20px;color:var(--gold2)}.locked{opacity:.38}
+.toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:#ead39e;color:#201707;padding:10px 16px;border-radius:12px;font-weight:800;font-size:13px;z-index:10;display:none;max-width:90%;text-align:center;box-shadow:0 8px 28px #0008}
+.weekgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.day{background:#0d0c09;border:1px solid var(--line);border-radius:10px;padding:8px 2px;text-align:center;font-size:10px;color:var(--muted)}.day b{display:block;color:var(--text);font-size:14px;margin-top:4px}.day.active{border-color:var(--gold-dark);background:#2b2111}.day.active b{color:var(--gold2)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.feature{background:linear-gradient(145deg,#211c13,#11100d);border:1px solid #4b3b22;border-radius:15px;padding:13px;min-height:112px}.feature .art{font-size:27px;color:var(--gold2);margin-bottom:8px}.feature b{display:block;font-size:13px}.feature small{color:var(--muted);font-size:11px}
+.boss{background:radial-gradient(circle at 85% 20%,#9a6c292b,transparent 35%),linear-gradient(135deg,#241b11,#12100d);border:1px solid #795b2d}.bossicon{font-size:48px;color:var(--gold2);text-shadow:0 0 24px #d8ad5466}
+.rewarditem{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.rewarditem:last-child{border:0}.rewardart{width:45px;height:45px;border:1px solid #73582d;border-radius:13px;background:#282014;display:grid;place-items:center;font-size:22px;color:var(--gold2)}
+.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.calday{aspect-ratio:1;border:1px solid #332b1e;background:#100f0c;border-radius:7px;display:grid;place-items:center;font-size:10px;color:var(--muted)}.calday.done{background:#5a421d;border-color:#a77d36;color:#fff0c6}.calday.today{outline:1px solid var(--gold2)}
+.chart{height:125px;display:flex;align-items:end;gap:7px;padding:10px 2px 0}.barcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:end;height:100%;gap:5px}.bar{width:100%;max-width:26px;background:linear-gradient(180deg,#f1d48e,#8e6327);border-radius:6px 6px 2px 2px;min-height:3px;box-shadow:0 0 10px #d8ad5420}.barcol small{font-size:9px;color:var(--muted)}
+.notice{border:1px solid #66502b;background:#211a0f;border-radius:12px;padding:11px;color:#d8c49b;font-size:11px;line-height:1.5}
+.tag{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);font-weight:800}
+@media(min-width:600px){.app{padding-top:25px}.hero{padding:22px}.level{font-size:42px}.grid2{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">LEVEL <span>UP</span></div><div class="date" id="todayLabel"></div></header>
+<main>
+<section class="page active" id="page-home">
+ <div class="card hero goldline">
+  <div class="row start"><div style="flex:1;position:relative;z-index:1"><div class="eyebrow">ПРОФИЛЬ ПЕРСОНАЖА</div><div class="level" id="levelText">Уровень 1</div><div class="rank" id="rankText">Новичок · путь начинается</div><div style="margin-top:19px"><div class="row"><span class="eyebrow">ОПЫТ</span><span class="xp" id="xpText">0 / 100 XP</span></div><div class="progress"><i id="levelBar" style="width:0%"></i></div><div class="muted small" id="remainingText">Ещё 100 XP до следующего уровня</div></div></div><div class="hero-art" aria-label="Символ персонажа">♜</div></div>
+ </div>
+ <div class="stats"><div class="stat"><b id="totalXP">0</b><span>Всего XP</span></div><div class="stat"><b id="doneCount">0</b><span>Квестов сегодня</span></div><div class="stat"><b id="streakCount">0</b><span>Дней подряд</span></div></div>
+ <div class="section"><div class="row"><h2>Квесты на сегодня</h2><span class="pill" id="questDate"></span></div><div class="card" id="todayTasks"></div></div>
+ <div class="section"><div class="row"><h2>Активность недели</h2><span class="muted small">7 дней</span></div><div class="card"><div class="weekgrid" id="weekGrid"></div></div></div>
+ <div class="section"><h2>Твой путь</h2><div class="grid2"><div class="feature"><div class="art">♧</div><b>Навыки</b><small id="homeSkills">6 направлений развития</small></div><div class="feature"><div class="art">✦</div><b>Золото</b><small id="homeCoins">0 монет в магазине</small></div><div class="feature"><div class="art">♛</div><b>Босс недели</b><small id="homeBoss">Цель ещё впереди</small></div></div></div>
+</section>
+
+<section class="page" id="page-quests">
+ <div class="eyebrow">ПЛАНИРОВАНИЕ</div><h2 style="font-size:24px;margin:4px 0 15px">Квесты</h2>
+ <div class="card"><h2>Новый квест</h2><label for="questName">Название</label><input id="questName" maxlength="60" placeholder="Например, прочитать 10 страниц"><div class="formgrid"><div><label for="questXP">Награда XP</label><select id="questXP"><option value="10">10 XP · легко</option><option value="15" selected>15 XP · обычно</option><option value="25">25 XP · сложно</option><option value="30">30 XP · большое дело</option></select></div><div><label for="questStat">Категория</label><select id="questStat"><option value="discipline">Дисциплина</option><option value="strength">Физическое развитие</option><option value="intellect">Интеллект</option><option value="social">Общение</option><option value="style">Уход за собой</option><option value="order">Организация</option></select></div></div><button class="primary" style="width:100%;margin-top:14px" id="addQuest">Добавить квест</button></div>
+ <div class="card"><div class="row"><h2>Ежедневные задания</h2><span class="tag">Daily</span></div><div id="allTasks"></div></div>
+ <div class="card"><div class="row"><h2>Еженедельные цели</h2><span class="tag">Weekly</span></div><div id="weeklyTasks"></div></div>
+ <div class="card"><h2>История выполнений</h2><div id="historyList"></div></div>
+</section>
+
+<section class="page" id="page-skills">
+ <div class="eyebrow">РАЗВИТИЕ ПЕРСОНАЖА</div><h2 style="font-size:24px;margin:4px 0 15px">Дерево навыков</h2>
+ <div class="card goldline"><div class="row"><div><div class="eyebrow">ОБЩИЙ ПРОГРЕСС</div><h2 style="margin:4px 0" id="skillTotal">6 направлений</h2></div><div class="bossicon">✥</div></div><div id="skillsList"></div></div>
+ <div class="notice">Каждые 100 XP в категории открывают следующий уровень навыка. Это игровые показатели прогресса, а не объективная оценка способностей.</div>
+</section>
+
+<section class="page" id="page-world">
+ <div class="eyebrow">МИР LEVEL UP</div><h2 style="font-size:24px;margin:4px 0 15px">Испытания и награды</h2>
+ <div class="card boss"><div class="row start"><div style="flex:1"><div class="eyebrow">ГЛАВНОЕ ИСПЫТАНИЕ НЕДЕЛИ</div><h2 style="font-size:20px;margin:5px 0">Босс недели</h2><div class="muted small" id="bossDescription">Выполни 12 квестов за неделю.</div></div><div class="bossicon">♛</div></div><div class="row" style="margin-top:15px"><b id="bossProgress">0 / 12</b><span class="xp">Награда: 100 XP + 100 монет</span></div><div class="progress"><i id="bossBar" style="width:0%"></i></div><button class="primary" id="claimBoss" style="width:100%;margin-top:10px" disabled>Завершить испытание</button></div>
+ <div class="card"><div class="row"><h2>Магазин наград</h2><span class="pill" id="coinBalance">0 монет</span></div><p class="muted small">За выполненные квесты начисляются монеты. Потрать их на реальные награды, которые сам заранее определишь.</p><div id="shopList"></div><div class="formgrid"><div><label for="rewardName">Своя награда</label><input id="rewardName" maxlength="45" placeholder="Например, поход в кино"></div><div><label for="rewardCost">Цена в монетах</label><input id="rewardCost" type="number" min="1" max="10000" value="100"></div></div><button class="secondary" id="addReward" style="width:100%;margin-top:10px">Добавить награду</button></div>
+ <div class="card"><h2>Достижения</h2><div id="achievements"></div></div>
+</section>
+
+<section class="page" id="page-stats">
+ <div class="eyebrow">АНАЛИТИКА</div><h2 style="font-size:24px;margin:4px 0 15px">Статистика</h2>
+ <div class="stats"><div class="stat"><b id="statXP">0</b><span>Всего XP</span></div><div class="stat"><b id="statDone">0</b><span>Всего квестов</span></div><div class="stat"><b id="statDays">0</b><span>Активных дней</span></div></div>
+ <div class="card"><h2>XP за последние 7 дней</h2><div class="chart" id="xpChart"></div></div>
+ <div class="card"><h2>Календарь активности</h2><p class="muted small">Золотым отмечены дни, когда был выполнен хотя бы один квест.</p><div class="calendar" id="calendar"></div></div>
+ <div class="card"><h2>Недельный отчёт</h2><div id="weeklyReport" class="muted small"></div></div>
+</section>
+
+<section class="page" id="page-settings">
+ <div class="eyebrow">УПРАВЛЕНИЕ</div><h2 style="font-size:24px;margin:4px 0 15px">Настройки</h2>
+ <div class="card"><h2>Уведомления</h2><p class="muted small">Выбери время ежедневного напоминания.</p><label for="notifyTime">Время напоминания</label><input id="notifyTime" type="time" value="20:00"><label style="display:flex;align-items:center;gap:9px;margin-top:12px"><input id="notifyEnabled" type="checkbox" style="width:auto"> Включить напоминания</label><button class="primary" id="saveNotify" style="width:100%;margin-top:12px">Сохранить настройки</button><button class="secondary" id="testNotify" style="width:100%;margin-top:9px">Проверить уведомление</button><div class="notice" style="margin-top:12px">Ограничение: в этой версии напоминание проверяется, пока LEVEL UP открыт. Если приложение полностью закрыто, браузер не гарантирует отправку по расписанию. Для надёжных уведомлений в закрытом состоянии понадобится push-сервер.</div></div>
+ <div class="card"><h2>Резервная копия</h2><p class="muted small">Экспортируй данные, чтобы перенести прогресс или восстановить его на этом устройстве.</p><div class="row" style="flex-wrap:wrap"><button class="secondary" id="exportBtn">Экспорт данных</button><button class="secondary" id="importBtn">Импорт данных</button><input type="file" id="importFile" accept="application/json" hidden></div></div>
+ <div class="card"><h2>О приложении</h2><p class="muted small">LEVEL UP · версия 2.0 Black & Gold<br>Личная система квестов и развития. Данные хранятся локально на устройстве.</p><div class="row"><span class="muted small">Хранение</span><span class="pill">Локально</span></div><div class="row" style="margin-top:9px"><span class="muted small">Интернет</span><span class="pill">Не нужен после установки</span></div></div>
+ <div class="card"><h2>Сброс прогресса</h2><p class="muted small">Удалит опыт, квесты, награды и историю. Сначала сделай резервную копию.</p><button class="danger" id="resetBtn">Сбросить все данные</button></div>
+</section>
+</main>
+</div>
+<nav class="nav"><div class="navin">
+<button class="active" data-page="home"><strong>⌂</strong>Главная</button>
+<button data-page="quests"><strong>☷</strong>Квесты</button>
+<button data-page="skills"><strong>✥</strong>Навыки</button>
+<button data-page="world"><strong>♛</strong>Мир</button>
+<button data-page="stats"><strong>▥</strong>Статистика</button>
+<button data-page="settings"><strong>⚙</strong>Ещё</button>
+</div></nav>
+<div class="toast" id="toast"></div>
+<script>
+const KEY='levelup_v1_data';
+const categories=[
+{id:'strength',name:'Физическое развитие',icon:'✦',desc:'Тренировки и движение'},
+{id:'intellect',name:'Интеллект',icon:'⌘',desc:'Учёба и мышление'},
+{id:'discipline',name:'Дисциплина',icon:'◎',desc:'Режим и регулярность'},
+{id:'social',name:'Общение',icon:'◉',desc:'Коммуникация'},
+{id:'style',name:'Уход за собой',icon:'✧',desc:'Личная гигиена'},
+{id:'order',name:'Организация',icon:'▦',desc:'Порядок и планирование'}];
+const defaults=[
+{id:'sleep',name:'Соблюдать режим сна',desc:'Выделить достаточно времени для сна',xp:20,cat:'discipline',kind:'daily'},
+{id:'workout',name:'Выполнить тренировку по плану',desc:'Только если сегодня тренировочный день',xp:30,cat:'strength',kind:'daily'},
+{id:'tidy',name:'Навести порядок',desc:'Убрать рабочее место или вещи',xp:15,cat:'order',kind:'daily'},
+{id:'care',name:'Уход за собой',desc:'Выполнить обычную гигиену',xp:15,cat:'style',kind:'daily'},
+{id:'study',name:'Учёба',desc:'Завершить одну запланированную задачу',xp:25,cat:'intellect',kind:'daily'},
+{id:'talk',name:'Практика общения',desc:'Содержательно поговорить или внимательно выслушать',xp:20,cat:'social',kind:'daily'}];
+const weeklyDefaults=[
+{id:'w5',name:'Выполнить 5 квестов за неделю',target:5,reward:35},
+{id:'w12',name:'Выполнить 12 квестов за неделю',target:12,reward:70},
+{id:'w3cat',name:'Продвинуться в 3 категориях',target:3,reward:50}];
+const defaultRewards=[
+{id:'r1',name:'Выбрать фильм для просмотра',cost:80,icon:'🎬'},
+{id:'r2',name:'Дополнительное свободное время',cost:120,icon:'⌛'},
+{id:'r3',name:'Небольшая покупка',cost:250,icon:'🎁'}];
+const today=()=>new Date().toLocaleDateString('en-CA');
+const dateKey=d=>d.toLocaleDateString('en-CA');
+const mondayKey=()=>{let d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7));return dateKey(d)};
+function fresh(){return {xp:0,coins:0,quests:defaults.map(x=>({...x})),completed:{},history:[],weeklyClaims:{},bossClaims:{},rewards:defaultRewards.map(x=>({...x})),redeemed:[],notifications:{enabled:false,time:'20:00'},created:Date.now()}}
+let data=load();
+function load(){try{let x=JSON.parse(localStorage.getItem(KEY));if(x&&Array.isArray(x.quests)&&x.completed){let base=fresh();return {...base,...x,coins:Number(x.coins)||0,rewards:Array.isArray(x.rewards)?x.rewards:base.rewards,weeklyClaims:x.weeklyClaims||{},bossClaims:x.bossClaims||{},notifications:x.notifications||base.notifications,redeemed:x.redeemed||[]}}}catch(e){}return fresh()}
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function level(){return Math.floor(data.xp/100)+1}
+function completedToday(){return data.completed[today()]||[]}
+function toast(t){let el=document.getElementById('toast');el.textContent=t;el.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.style.display='none',2300)}
+function catName(id){return categories.find(c=>c.id===id)?.name||'Другое'}
+function weekHistory(){let start=mondayKey();return data.history.filter(h=>h.date>=start)}
+function streak(){let dates=[...new Set(data.history.map(h=>h.date))].sort().reverse();if(!dates.length)return 0;let cursor=new Date();cursor.setHours(0,0,0,0);if(dates[0]!==dateKey(cursor)){cursor.setDate(cursor.getDate()-1);if(dates[0]!==dateKey(cursor))return 0}let n=0;for(let d of dates){if(d===dateKey(cursor)){n++;cursor.setDate(cursor.getDate()-1)}else if(d<dateKey(cursor))break}return n}
+function award(q){let done=completedToday();if(done.includes(q.id))return;done.push(q.id);data.completed[today()]=done;data.xp+=Number(q.xp);data.coins+=Number(q.xp);data.history.unshift({date:today(),name:q.name,xp:Number(q.xp),cat:q.cat,id:q.id});save();render();toast('+'+q.xp+' XP · +'+q.xp+' монет');if(level()>Math.floor((data.xp-Number(q.xp))/100)+1)toast('НОВЫЙ УРОВЕНЬ · '+level())}
+function taskHTML(q){let done=completedToday().includes(q.id);return `<div class="task"><button class="check ${done?'done':''}" data-complete="${escapeHTML(q.id)}" aria-label="Отметить выполнение">${done?'✓':''}</button><div class="taskmain"><b>${escapeHTML(q.name)}</b><small>${escapeHTML(q.desc||catName(q.cat))}</small></div><span class="reward">+${q.xp} XP</span></div>`}
+function renderHome(){
+ let xp=data.xp,lv=level(),part=xp%100;document.getElementById('levelText').textContent='Уровень '+lv;
+ document.getElementById('rankText').textContent=lv<3?'Новичок · путь начинается':lv<6?'Практик · система формируется':lv<10?'Продвинутый · устойчивый прогресс':'Эксперт · высокий уровень';
+ document.getElementById('xpText').textContent=part+' / 100 XP';document.getElementById('levelBar').style.width=part+'%';document.getElementById('remainingText').textContent='Ещё '+(100-part)+' XP до следующего уровня';
+ document.getElementById('totalXP').textContent=xp;document.getElementById('doneCount').textContent=completedToday().length;document.getElementById('streakCount').textContent=streak();
+ document.getElementById('todayLabel').textContent=new Date().toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'long'});document.getElementById('questDate').textContent=new Date().toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
+ let tasks=data.quests.filter(q=>q.kind!=='weekly');document.getElementById('todayTasks').innerHTML=tasks.length?tasks.map(taskHTML).join(''):'<div class="empty">Добавь квест во вкладке «Квесты».</div>';
+ let start=new Date();start.setDate(start.getDate()-((start.getDay()+6)%7));let labels=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+ document.getElementById('weekGrid').innerHTML=labels.map((l,i)=>{let d=new Date(start);d.setDate(start.getDate()+i);let n=(data.completed[dateKey(d)]||[]).length;return `<div class="day ${n?'active':''}">${l}<b>${n?'✓':d.getDate()}</b></div>`}).join('');
+ document.getElementById('homeCoins').textContent=data.coins+' монет в магазине';document.getElementById('homeBoss').textContent=Math.min(weekHistory().length,12)+' / 12 квестов';document.getElementById('homeSkills').textContent=categories.length+' направлений развития';
+}
+function weeklyProgress(id){let wh=weekHistory();if(id==='w5')return Math.min(wh.length,5);if(id==='w12')return Math.min(wh.length,12);if(id==='w3cat')return Math.min(new Set(wh.map(h=>h.cat)).size,3);return 0}
+function renderQuests(){
+ let daily=data.quests.filter(q=>q.kind!=='weekly');document.getElementById('allTasks').innerHTML=daily.length?daily.map(taskHTML).join(''):'<div class="empty">Список пуст.</div>';
+ document.getElementById('weeklyTasks').innerHTML=weeklyDefaults.map(q=>{let p=weeklyProgress(q.id),claimed=data.weeklyClaims[mondayKey()]||[];let done=p>=q.target,got=claimed.includes(q.id);return `<div class="task"><div class="taskmain"><b>${q.name}</b><small>${p} / ${q.target} · награда ${q.reward} XP</small><div class="progress"><i style="width:${p/q.target*100}%"></i></div></div>${got?'<span class="pill">Получено</span>':done?`<button class="secondary" data-weekclaim="${q.id}">Забрать</button>`:'<span class="reward">+'+q.reward+' XP</span>'}</div>`}).join('');
+ document.getElementById('historyList').innerHTML=data.history.length?data.history.slice(0,14).map(h=>`<div class="task"><div class="taskmain"><b>${escapeHTML(h.name)}</b><small>${escapeHTML(h.date)} · ${escapeHTML(catName(h.cat))}</small></div><span class="reward">+${h.xp} XP</span></div>`).join(''):'<div class="empty">История появится после первого квеста.</div>';
+}
+function renderSkills(){
+ document.getElementById('skillsList').innerHTML=categories.map(c=>{let xp=data.history.filter(h=>h.cat===c.id).reduce((a,h)=>a+h.xp,0),lv=Math.floor(xp/100)+1;return `<div class="skill"><div class="skillhead"><span>${c.icon} ${c.name}<br><small class="muted">${c.desc}</small></span><b>Ур. ${lv} · ${xp} XP</b></div><div class="skillbar"><i style="width:${xp%100}%"></i></div></div>`}).join('');
+}
+function renderWorld(){
+ let wh=weekHistory(),p=Math.min(wh.length,12),claimed=(data.bossClaims[mondayKey()]||false);document.getElementById('bossProgress').textContent=p+' / 12';document.getElementById('bossBar').style.width=p/12*100+'%';document.getElementById('bossDescription').textContent=claimed?'Испытание этой недели пройдено.':p>=12?'Босс побеждён. Забери награду.':'Выполни 12 квестов за неделю.';let b=document.getElementById('claimBoss');b.disabled=p<12||claimed;b.textContent=claimed?'Награда получена':'Забрать награду';
+ document.getElementById('coinBalance').textContent=data.coins+' монет';document.getElementById('shopList').innerHTML=data.rewards.length?data.rewards.map(r=>`<div class="rewarditem"><div class="rewardart">${escapeHTML(r.icon||'✦')}</div><div class="taskmain"><b>${escapeHTML(r.name)}</b><small>${r.cost} монет</small></div><button class="secondary" data-buy="${r.id}" ${data.coins<r.cost?'disabled':''}>Обменять</button></div>`).join(''):'<div class="empty">Добавь свою награду.</div>';
+ let ach=[['Первый шаг','Выполнить первый квест',data.history.length>=1,'✦'],['Пять побед','Выполнить 5 квестов',data.history.length>=5,'◆'],['Первый уровень','Набрать 100 XP',data.xp>=100,'⬆'],['Полтысячи','Набрать 500 XP',data.xp>=500,'★'],['Разносторонний','Получить XP в 4 категориях',new Set(data.history.map(h=>h.cat)).size>=4,'◈'],['Серия 7','Активность 7 дней подряд',streak()>=7,'♜'],['Сотня квестов','Выполнить 100 квестов',data.history.length>=100,'♛']];
+ document.getElementById('achievements').innerHTML=ach.map(a=>`<div class="achievement ${a[2]?'':'locked'}"><div class="medal">${a[3]}</div><div style="flex:1"><b>${a[0]}</b><div class="muted small">${a[1]}</div></div><span class="pill">${a[2]?'Открыто':'Закрыто'}</span></div>`).join('');
+}
+function renderStats(){
+ document.getElementById('statXP').textContent=data.xp;document.getElementById('statDone').textContent=data.history.length;document.getElementById('statDays').textContent=new Set(data.history.map(h=>h.date)).size;
+ let labels=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],start=new Date();start.setDate(start.getDate()-6);let vals=[];
+ for(let i=0;i<7;i++){let d=new Date(start);d.setDate(start.getDate()+i);let k=dateKey(d),sum=data.history.filter(h=>h.date===k).reduce((a,h)=>a+h.xp,0);vals.push({l:labels[(d.getDay()+6)%7],v:sum})}
+ let max=Math.max(1,...vals.map(x=>x.v));document.getElementById('xpChart').innerHTML=vals.map(x=>`<div class="barcol"><div class="bar" style="height:${Math.max(3,x.v/max*90)}px" title="${x.v} XP"></div><small>${x.l}</small></div>`).join('');
+ let days=[];let now=new Date();for(let i=34;i>=0;i--){let d=new Date(now);d.setDate(now.getDate()-i);let k=dateKey(d),done=(data.completed[k]||[]).length;days.push(`<div class="calday ${done?'done':''} ${k===today()?'today':''}" title="${k}: ${done} квестов">${d.getDate()}</div>`)}document.getElementById('calendar').innerHTML=days.join('');
+ let wh=weekHistory(),sum=wh.reduce((a,h)=>a+h.xp,0);document.getElementById('weeklyReport').innerHTML=`За эту неделю выполнено <b style="color:var(--text)">${wh.length} квестов</b>, заработано <b style="color:var(--gold2)">${sum} XP</b> и открыто <b style="color:var(--text)">${new Set(wh.map(h=>h.cat)).size} из 6</b> категорий. Текущая серия: <b style="color:var(--gold2)">${streak()} дн.</b>`;
+}
+function render(){renderHome();renderQuests();renderSkills();renderWorld();renderStats();save()}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+b.dataset.page));window.scrollTo({top:0,behavior:'smooth'})}));
+document.addEventListener('click',e=>{
+ let b=e.target.closest('[data-complete]');if(b){let q=data.quests.find(x=>x.id===b.dataset.complete);if(q)award(q)}
+ let w=e.target.closest('[data-weekclaim]');if(w){let q=weeklyDefaults.find(x=>x.id===w.dataset.weekclaim);if(q&&weeklyProgress(q.id)>=q.target){let claims=data.weeklyClaims[mondayKey()]||[];if(!claims.includes(q.id)){claims.push(q.id);data.weeklyClaims[mondayKey()]=claims;data.xp+=q.reward;data.coins+=q.reward;save();render();toast('Награда: +'+q.reward+' XP')}}}
+ let buy=e.target.closest('[data-buy]');if(buy){let r=data.rewards.find(x=>x.id===buy.dataset.buy);if(r&&data.coins>=r.cost){data.coins-=r.cost;data.redeemed.unshift({name:r.name,date:today(),cost:r.cost});save();render();toast('Награда обменена. Не забудь выполнить её в реальности.')}}
+});
+document.getElementById('addQuest').addEventListener('click',()=>{let name=document.getElementById('questName').value.trim();if(!name){toast('Введи название квеста');return}let xp=Number(document.getElementById('questXP').value),cat=document.getElementById('questStat').value;data.quests.push({id:'custom_'+Date.now(),name,desc:'Пользовательский квест',xp,cat,kind:'daily'});document.getElementById('questName').value='';render();toast('Квест добавлен')});
+document.getElementById('claimBoss').addEventListener('click',()=>{if(weekHistory().length>=12&&!data.bossClaims[mondayKey()]){data.bossClaims[mondayKey()]=true;data.xp+=100;data.coins+=100;render();toast('Босс побеждён · +100 XP · +100 монет')}});
+document.getElementById('addReward').addEventListener('click',()=>{let name=document.getElementById('rewardName').value.trim(),cost=Math.floor(Number(document.getElementById('rewardCost').value));if(!name||!Number.isFinite(cost)||cost<1){toast('Укажи название и цену');return}data.rewards.push({id:'custom_'+Date.now(),name,cost,icon:'✦'});document.getElementById('rewardName').value='';render();toast('Награда добавлена')});
+document.getElementById('exportBtn').addEventListener('click',()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='level-up-backup.json';a.click();URL.revokeObjectURL(a.href);toast('Резервная копия подготовлена')});
+document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change',async e=>{let f=e.target.files[0];if(!f)return;try{let x=JSON.parse(await f.text());if(!Array.isArray(x.quests)||!x.completed||typeof x.xp!=='number')throw Error();data={...fresh(),...x};save();render();toast('Данные восстановлены')}catch(err){toast('Не удалось прочитать резервную копию')}e.target.value=''});
+document.getElementById('resetBtn').addEventListener('click',()=>{if(confirm('Точно удалить весь прогресс? Это действие нельзя отменить.')){data=fresh();save();render();toast('Прогресс сброшен')}});
+async function requestNotification(){if(!('Notification'in window)){toast('Браузер не поддерживает уведомления');return false}if(Notification.permission==='granted')return true;if(Notification.permission==='denied'){toast('Разрешение заблокировано в настройках браузера');return false}let p=await Notification.requestPermission();return p==='granted'}
+function sendNotification(title,body){if('Notification'in window&&Notification.permission==='granted'){try{new Notification(title,{body,icon:'icon.svg',tag:'levelup-daily'})}catch(e){toast(body)}}else toast(body)}
+function checkReminder(){if(!data.notifications?.enabled)return;let now=new Date(),hm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0'),stamp=today()+'_'+hm;if(hm===data.notifications.time&&localStorage.getItem('levelup_last_reminder')!==stamp){localStorage.setItem('levelup_last_reminder',stamp);sendNotification('LEVEL UP','Проверь свои квесты и прогресс за сегодня.')}}
+document.getElementById('saveNotify').addEventListener('click',async()=>{let enabled=document.getElementById('notifyEnabled').checked,time=document.getElementById('notifyTime').value||'20:00';if(enabled&&!await requestNotification()){document.getElementById('notifyEnabled').checked=false;return}data.notifications={enabled,time};save();toast(enabled?'Напоминание сохранено':'Напоминания выключены')});
+document.getElementById('testNotify').addEventListener('click',async()=>{if(await requestNotification())sendNotification('LEVEL UP','Тестовое уведомление работает.')});
+document.getElementById('notifyEnabled').checked=!!data.notifications.enabled;document.getElementById('notifyTime').value=data.notifications.time||'20:00';
+setInterval(checkReminder,15000);
+if('serviceWorker'in navigator&&location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
+render();
+</script>
+</body></html>
